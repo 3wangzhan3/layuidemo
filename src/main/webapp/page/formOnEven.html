@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="../layui/css/layui.css">
+	</head>
+	<body>
+		<!-- 时间组件 -->
+		<div class="layui-inline">
+			<label id="lblApplyDate" class="layui-form-label">申请时间:</label>
+			<div class="layui-input-inline">
+				<input type="text" ID="txtdate1" Class="layui-input search" />
+				<input type="text" ID="txtdate" Class="layui-input search" />
+				<input type="button" id="datebtn" value="获取时间" />
+			</div>
+		</div>
+		
+		<!-- form.on时间 -->
+		<form class="layui-form" lay-filter="test1">
+			<div class="layui-form-item" lay-filter="checkall">
+				<label class="layui-form-label">下拉选择框</label>
+				<div class="layui-input-block" style="width: 100px;">
+					<!-- 监听指定下拉框事件 需要加上lay-filter="selectfilter" -->
+					<select class="check" name="Role" class="layui-form-select search" lay-filter="selectfilter">
+						<option value="0">请选择</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">复选框</label>
+				<div class="layui-input-block" style="width: 100px;">
+					<input value="1" type="checkbox" name="Like" title="写作">
+					<input value="2" type="checkbox" name="Like" title="阅读">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">单选框</label>
+					<input type="radio" name="Gender" value="0" title="男">
+			        <input type="radio" name="Gender" value="1" title="女">
+			</div>
+		</form>
+		<form class="layui-form" lay-filter="test2" >
+			<div class="layui-form-item" lay-filter="checkall">
+				<label class="layui-form-label">下拉选择框</label>
+				<div class="layui-input-block" style="width: 100px;">
+					<!-- 监听下拉框事件 需要加上lay-filter="selectfilter" -->
+					<select class="check" name="Role" class="layui-form-select search" lay-filter="selectfilter">
+						<option value="0">请选择</option>
+					</select>
+					
+					<!-- 监听下拉框事件 需要加上lay-filter="selectfilter" -->
+					<select class="check" name="Role" class="layui-form-select search">
+						<option value="0">请选择</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">复选框</label>
+				<div class="layui-input-block" style="width: 100px;">
+					<input value="1" type="checkbox" name="Like" title="写作">
+					<input value="2" type="checkbox" name="Like" title="阅读">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">单选框</label>
+					<input type="radio" name="Gender" value="0" title="男">
+			        <input type="radio" name="Gender" value="1" title="女">
+			</div>
+		</form>
+	</body>
+	<script src="../layui/jquery.min.js"></script>
+	<script src="../layui/layui.js"></script>
+	<script>
+		/* 点击事件，获取时间控件的内容 */
+		$("#datebtn").on('click',function(){
+			if($("#txtdate").val() != null && $("#txtdate").val().length >0){
+				console.log($("#txtdate").val());
+			}
+			if($("#txtdate1").val() !=null && $("#txtdate1").val().length >0){
+				console.log($("#txtdate1").val());
+			}
+		})
+		/* layui初始化 */
+		layui.use(['form','jquery','laydate'], function(){
+			var form = layui.form,
+				$ =layui.$,
+				laydate =layui.laydate;
+				
+			//显示laydate控件,准确时间
+			laydate.render({
+				elem: '#txtdate1'
+			});
+			
+			//显示laydate控件,时间段
+			laydate.render({
+				elem: '#txtdate'
+				,range: '~'
+				, closeStop: '#txtdate' //这里代表的意思是：点击 test1 所在元素阻止关闭事件冒泡。如果不设定，则无法弹出控件
+				, trigger: 'click'
+			});
+			
+			/* 给下拉选择框动态赋值 */
+			$(".check").each(function(index,ele){
+				$(ele).append(
+					"<option value='"+1+"'>北京</option>" +
+					"<option value='"+2+"'>上海</option>" +
+					"<option value='"+3+"'>天津</option>"
+				)
+			})
+			//可局部刷新的元素 select,radio,checkbox
+			//动态添加表单元素时，需要重新渲染
+			form.render();	//渲染全部表单元素
+			//form.render('select');  //刷新select选择框
+			//form.render('select','test1');//表单lay-filter属性的值为test1，重新渲染
+			
+			/* 下拉选择框的值改变，点击事件 */
+			/* 只对select标签中lay-filter的值为selectfilter生效 */
+			form.on('select(selectfilter)', function (data) {
+				console.log(data);		//所有数据
+				console.log(data.value);   //选中的option的value
+			})
+			
+			/* 单选框值改变，点击事件 */
+			form.on('radio',function(data){
+				console.log(data);	//所有数据
+				console.log(data.value);	//value值
+			})
+			
+			/* 复选框值改变，点击事件 */
+			form.on('checkbox',function(data){
+				console.log(data);	//所有数据
+				console.log(data.value); 	//value值
+			})
+		});
+	</script>
+</html>
