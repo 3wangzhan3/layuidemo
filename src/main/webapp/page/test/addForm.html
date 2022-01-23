@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="../../layui/css/layui.css"/>
+	</head>
+	<body>
+		<form id="SearchForm" class="layui-form">
+			<div class="layui-inline">
+				<input type="button" id="btnadd" class="layui-btn" data-type="add" value="新增"/>
+			</div>
+		</form>
+		<table id="demo" lay-filter="test" class="layui-table"></table>
+		<div class="layui-row" id="addShopForm" style="display: none;">
+		    <form id="addForm" class="layui-form" enctype="multipart/form-data">
+		        <div class="layui-form-item" style="margin-top: 20px">
+					<div class="layui-inline">
+						<label class="layui-form-label">用户名:</label>
+						<div class="layui-input-inline">
+							<input type="text" name="username" id="username" lay-verify="required" autocomplete="off"
+								   class="layui-input" >
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">密码:</label>
+						<div class="layui-input-inline">
+							<input type="password" name="password" id="password" lay-verify="required" autocomplete="off"
+								   class="layui-input" >
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">权限</label>
+						<div class="layui-input-inline">
+							<select name="roleId" class="layui-form-select search" id="role_id" lay-verify="required">
+								<option value="">请选择</option>
+							</select>
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">邮箱:</label>
+						<div class="layui-input-inline">
+							<input type="text" name="email" id="email" lay-verify="required" autocomplete="off"
+								   class="layui-input">
+						</div>
+					</div>
+		            <hr>
+		            <div class="layui-form-item" style="float: left">
+		                <div class="layui-form-item" style="margin-left: 10px;">
+		                    <button class="layui-btn" onclick="sure()" id="baocun" type="button">保存</button>
+		                </div>
+		            </div>
+		        </div>
+		
+		    </form>
+		</div>
+	</body>
+<script src="../../layui/jquery.min.js"></script>
+<script src="../../layui/layui.js"></script>
+<script>
+	layui.use(['form','table','layer'],function(){
+		var $ = layui.$
+		,form = layui.form
+		,table = layui.table
+		,layer = layui.layer;
+		
+		tableIns1 = table.render({
+		  elem: '#demo'	//table标签的id
+		  ,id: 'id'
+		  ,height: 400
+		  ,url: '/test' //数据接口
+		  ,page: { //开启分页
+			layout:['limit','count','prev','page','next','skip'],
+			groups: 3,//只显示三个连续码
+			first: false,//不显示首页
+			last:false,//不显示尾页
+			curr:1, //设定初始在第1页
+			limit:10, //每页条数
+		  }
+		  ,cols: [[ //表头,field的值必须与数据库的字段(返回的实体类属性名)一致
+			{fixed: 'left', type: 'checkbox' }	//多选框
+			,{fixed: 'left', width: 80, align: 'center', title: '操作', toolbar: '#barDemo' }	//获取一行数据
+			,{field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
+			,{field: 'username', title: '用户名', width:80}
+			,{field: 'password', title: '密码', width:80, sort: true}
+			,{field: 'age', title: '年龄', width:80, sort: true} 
+		  ]]
+			,limits:[10,20,30] //自定义分页数据选项
+			,done:function(res){	//访问接口成共的回调函数，res变量为所有的数据
+				//console.log(res);
+			}
+		});
+		
+		// 监听form表单下的btn 注意btn中的需要设置data-types
+		$("#SearchForm .layui-btn").on("click",function(){
+			var type = $(this).data('type');    // 获取触发点击时按钮的data-type属性的值
+			active[type] ? active[type].call(this) : '';
+		});
+		var active= {
+			add:function(){
+				//给权限下拉框绑定值
+				getRoleMsg("role_id");
+				//点击新增时，首先清空输入框及下拉框的值
+				$("#username").val("");
+				$("#password").val("");
+				$("#email").val("");
+				layer.open({
+				    title: '新增用户信息',
+				    type: 1,
+				    skin: 'layui-layer-molv',
+				    area: ['900px', '400px'],
+				    content: $("#addShopForm"),
+				    success: function () {
+				        form.render('select');
+				    },
+				});
+			}
+			
+		};
+	//给权限下拉框赋值
+	function getRoleMsg(ele){
+		$.ajax({
+		  url:"/getRoleName",
+		  type:"get",
+		  dataType:"json",
+		  success:function(ret){
+			  for(var i=0;i<ret.length;i++){
+				$("#"+ele).append("<option value='"+ret[i].roleId+"'>"+ret[i].roleName+"</option>");
+			  }
+			  form.render();	//渲染全部表单元素
+		  }
+		})
+	}
+})
+	
+function sure(){
+	layer.confirm('确定提交么',{icon:3,title:'提示'},function(index){
+		var dto ={
+			'username':$("#username").val(),
+			'password':$("#password").val(),
+			'roleId':$("#role_id").val(),
+			'roleName':$("#role_id").find("option:selected").text(),
+			'email':$("#email").val()
+		}
+		$.ajax({
+			url:"/regist",
+			type:"post",
+			contentType:"application/json",
+			data:JSON.stringify(dto),
+			dataType:"json",
+			success:function(data){
+				if(data.code==1){
+					layer.closeAll();
+					layer.msg("新增成功");
+				}else{
+					layer.closeAll();
+					layer.msg("新增失败");
+				}
+			}
+		})
+	})
+}
+
+
+</script>
+<!-- js模板 -->
+<script type="text/html" id="barDemo">
+   <a lay-event="update"><i class="layui-btn layui-btn-xs layui-icon layui-icon-search"title="查看"></i></a>
+</script>
+</html>

@@ -12,9 +12,9 @@
         <div class="layui-logo">小笼包子业务管理平台</div>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
-                欢迎光临，商户001
+                欢迎光临，<span id="username"></span>
             </li>
-            <li class="layui-nav-item"><a href="">安全退出</a></li>
+            <li class="layui-nav-item"><a href="/exit">安全退出</a></li>
         </ul>
     </div>
  
@@ -26,27 +26,36 @@
                     <a class="" href="javascript:;">管理员管理</a>
                     <dl class="layui-nav-child">
                         <dd>
-                            <a href="javascript:;" data-id="1" data-title="管理员列表" data-url="/page/testTable.html"
-                               class="site-demo-active" data-type="tabAdd">管理员列表</a></dd>
-                        <dd><a href="javascript:;" data-id="2" data-title="管理员日志" data-url="/page/formOnEven.html"
-                               class="site-demo-active" data-type="tabAdd">管理员日志</a></dd>
+                            <a href="javascript:;" data-id="1" data-title="管理员列表" data-url="/page/test/addForm.html" class="site-demo-active" data-type="tabAdd">管理员列表</a>
+						</dd>
+                        <dd>
+							<a href="javascript:;" data-id="2" data-title="管理员日志" data-url="/page/testForm.html" class="site-demo-active" data-type="tabAdd">管理员日志</a>
+						</dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;">交易管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" data-id="" data-id="3" data-title="存款列表"
-                               　data-url="index.php?&a=adminList" class="site-demo-active" data-type="tabAdd">存款列表</a>
+                        <dd>
+							<a href="javascript:;" data-id="3" data-title="存款列表" data-url="/page/testLayer.html" class="site-demo-active" data-type="tabAdd">存款列表</a>
                         </dd>
-                        <dd><a href="javascript:;">代付列表</a></dd>
+                        <dd>
+							<a href="javascript:;" data-id="4" data-title="代付列表" data-url="/page/testTable.html" class="site-demo-active" data-type="tabAdd">代付列表</a>
+						</dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;">系统管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">支付API设置</a></dd>
-                        <dd><a href="javascript:;">公告设置</a></dd>
-                        <dd><a href="javascript:;">控制台</a></dd>
+                        <dd>
+							<a href="javascript:;" data-id="5" data-title="支付API设置" data-url="/page/testTable.html" class="site-demo-active" data-type="tabAdd">支付API设置</a>
+						</dd>
+                        <dd>
+							<a href="javascript:;" data-id="6" data-title="公告设置" data-url="/page/testTable.html" class="site-demo-active" data-type="tabAdd">公告设置</a>
+						</dd>
+                        <dd>
+							<a href="javascript:;" data-id="7" data-title="控制台" data-url="/page/testTable.html" class="site-demo-active" data-type="tabAdd">控制台</a>
+						</dd>
                 </li>
             </ul>
         </div>
@@ -64,6 +73,7 @@
 	</div>
 </div>
 </body>
+<script src="../layui/jquery.min.js"></script>
 <script src="../layui/layui.js"></script>
 	<script>
 	 layui.use(['element', 'layer', 'jquery'], function () {
@@ -120,6 +130,32 @@
 			$("iframe").css("height",h+"px");
 		}
 	});
+</script>
+<script>
+	$(function(){
+		/* 设置用户名 */
+		$.ajax({
+			url:"/getUserName",
+			type:"get",
+			dataType:"json",
+			success:function(ret){
+				$("#username").text(ret);
+				console.log($("#username").text());
+				
+				//session存储用户名
+				$.ajax({
+					url:"/setSession?account="+$("#username").text(),
+					type:"get",
+					dataType:"json",
+					success:function(){
+					}
+				})
+			},
+			error:function(){
+				//console.log(111);
+			}
+		})
+	})
 </script>
 </html>
       

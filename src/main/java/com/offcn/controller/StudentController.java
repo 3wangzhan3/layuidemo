@@ -1,21 +1,47 @@
 package com.offcn.controller;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.offcn.dto.PageDto;
 import com.offcn.dto.StudentDto;
+import com.offcn.pojo.Role;
 import com.offcn.pojo.Student;
+import com.offcn.pojo.Tuser;
 import com.offcn.service.StudentService;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
-public class StudentController {
+public class StudentController extends Result{
 
     @Autowired
     private StudentService studentService;
+
+    @RequestMapping("/LOGIN")
+    public String LOGIN(){
+        return "page/menu.html";
+    }
+
+    //获取rolename集合
+    @RequestMapping("getRoleName")
+    @ResponseBody
+    public List<Role> getRoleName(){
+        List<Role> roles = studentService.getRoleName();
+        return roles;
+    }
+
+    //获取用户名
+    @GetMapping("getUserName")
+    @ResponseBody
+    public String getSession(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return JSONUtils.toJSONString(username);
+    }
+
 
     @RequestMapping("test")
     @ResponseBody
@@ -37,11 +63,30 @@ public class StudentController {
 
     @PostMapping("regist")
     @ResponseBody
-    public String regist(@RequestBody Student student){
-        int ret =studentService.regist(student);
-        if (ret>0){
-            return "添加成功";
+    public Result regist(@RequestBody Tuser user){
+        String msg=studentService.regist(user);
+        if (msg.equals("添加成功")){
+            return this.tranSuccess("成功");
         }
-        return "添加失败";
+        return this.tranError("失败");
+    }
+    //首页登录成功后session中存储用户名
+    @RequestMapping("/setSession")
+    @ResponseBody
+    public void setSession(@RequestParam("account") String username,HttpSession session){
+        session.setAttribute("account",username);
+    }
+
+    //重置密码
+    @RequestMapping("resetpsd")
+    @ResponseBody
+    public String resetpsd(@RequestParam("psd") String email,HttpSession session){
+
+        String username = (String)session.getAttribute("account");
+        Tuser user =studentService.findUserName(username);
+        if (user !=null){
+
+        }
+        return "";
     }
 }

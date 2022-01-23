@@ -9,8 +9,12 @@
         order by username+0
     </select>
 
-    <insert id="regist" >
-        insert into student values(uuid(),#{username},#{password},#{age})
+    <insert id="regist" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into t_user values(null,#{username},#{password},#{roleName},#{email})
+    </insert>
+
+    <insert id="setRoleUser">
+        insert into t_user_role values (null,#{userId},#{roleId})
     </insert>
 
     <select id="getCount" resultType="java.lang.Integer">
@@ -20,7 +24,11 @@
         </if>
     </select>
 
-    <select id="findUserByName" resultType="student">
-        select * from student where username =#{username}
+    <select id="findUserByName" resultType="tuser">
+        select * from t_user where username =#{username}
+    </select>
+
+    <select id="getRoleName" resultType="role">
+        select * from t_role
     </select>
 </mapper>

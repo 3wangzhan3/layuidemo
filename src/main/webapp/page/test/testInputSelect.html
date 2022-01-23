@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="../../layui/css/layui.css"/>
+	</head>
+	<body>
+		<form class="layui-form" >
+			<div class="layui-form-item">
+				<div class="layui-inline col-sm-12">
+					<select id="TemplateOptions" name="effectsType" class="layui-select" lay-verify="required" lay-filter="selectTemplate" lay-search>
+						<option value="0">实体要素内容选择</option>
+						<option value="1" selected="selected">111</option>
+						<option value="2">222</option>
+						<option value="3">333</option>
+						<option value="4">444</option>
+					</select>
+				</div>
+			</div>
+		</form>
+		<button id="btn">清空下拉框值</button>
+	</body>
+<script src="../../layui/jquery.min.js"></script>
+<script src="../../layui/layui.js"></script>
+<script>
+	layui.use(['form','element'],function(){
+		var $ = layui.$
+		,form = layui.form;
+		var value = $("#TemplateOptions").val();
+		console.log(value);
+		var checkedvalue = $("#TemplateOptions").find('option:selected').text();
+		console.log(checkedvalue);
+		$("#btn").on('click',function(){
+			//$("#TemplateOptions").empty(); //清空下拉选择框
+			$("#TemplateOptions").val("0");
+			form.render();
+		})
+	})
+</script>
+</html>

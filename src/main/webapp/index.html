@@ -2,10 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>首页面2</title>
+    <title>登录</title>
+	<link rel="stylesheet" href="../layui/css/layui.css">
 </head>
 <body>
-    <h1>第二个首页面</h1>
-    <a href="page/regist.html">注册</a>
+<h2>自定义登录页面</h2>
+<form action="/login" method="post">
+    <table>
+        <tr>
+            <td>用户名:</td>
+            <td><input type="text" name="username"></td>
+        </tr>
+        <tr>
+            <td>密码:</td>
+            <td><input type="password" name="password"></td>
+        </tr>
+        <tr>
+            <td>
+                <button type="submit">登录</button>
+            </td>
+            <td>
+                <input type="button" value="忘记密码" id="resetpsd"/>
+            </td>
+        </tr>
+		
+		<tr>
+		    <td>
+		        <a href="/page/regist.html">注册</a>
+		    </td>
+		</tr>
+    </table>
+</form>
+<div id="msg" style="display: none;">
+	<div class="layui-form-item">
+		<label class="layui-form-label">输入邮箱:</label>
+		<div class="layui-input-block">
+			<input id="email" style="width: 400px;" type="text" required lay-verify="required"  placeholder="请输入邮箱" class="layui-input">
+			<input id="getCode" type="button" value="获取验证码"  class="layui-btn" />
+		</div>
+	</div>
+</div>
 </body>
+<script src="../layui/jquery.min.js"></script>
+<script src="../layui/layui.js"></script>
+	<script>
+		layui.use(['layer','jquery'],function(){
+			var $=layui.$,
+				layer=layui.layer;
+			$("#resetpsd").on("click",function(){
+				layer.open({
+				  title: "修改密码", //标题
+				  type: 1,
+				  skin: 'layui-layer-molv',//样式
+				  area: ['750px','500px'],//宽高
+				  content: $('#msg'), //捕获的元素
+				  cancel: function(){//退出弹出层，执行的方法
+				    //layer.msg('修改成功', {time: 5000, icon:6});
+				  },
+				  success:function(){//弹出层成功弹出后，执行的方法
+					  $("#getCode").on('click',function(){
+						  var code = $("#email").val();
+						  if(code != null & code != undefined & code!= ""){
+							  $.ajax({
+								  url:"/resetpsd?psd="+code,
+								  type:"get",
+								  dataType:"json",
+								  success:function(){
+									  layer.msg('修改成功', {time: 5000, icon:6});
+									  //layer.closeAll();
+								  }
+							  })
+						  }else{
+							  layer.alert("邮箱地址不能为空");
+						  }
+					  })
+				  }
+				});
+			})
+		})
+	</script>
 </html>

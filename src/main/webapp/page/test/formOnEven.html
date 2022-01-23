@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title></title>
-		<link rel="stylesheet" href="../layui/css/layui.css">
+		<link rel="stylesheet" href="../../layui/css/layui.css">
 	</head>
 	<body>
 		<!-- 时间组件 -->
@@ -69,8 +69,8 @@
 			</div>
 		</form>
 	</body>
-	<script src="../layui/jquery.min.js"></script>
-	<script src="../layui/layui.js"></script>
+	<script src="../../layui/jquery.min.js"></script>
+	<script src="../../layui/layui.js"></script>
 	<script>
 		/* 点击事件，获取时间控件的内容 */
 		$("#datebtn").on('click',function(){
@@ -89,7 +89,9 @@
 				
 			//显示laydate控件,准确时间
 			laydate.render({
-				elem: '#txtdate1'
+				elem: '#txtdate1',
+				,closeStop:'#txtdate1',
+				,trigger:'click'
 			});
 			
 			//显示laydate控件,时间段

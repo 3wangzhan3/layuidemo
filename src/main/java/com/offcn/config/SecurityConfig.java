@@ -2,21 +2,32 @@ package com.offcn.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()     // 对请求进行验证
-                .antMatchers("/**").hasRole("ADMIN")     // 必须有ADMIN权限
-                .anyRequest()     //任意请求（这里主要指方法）
-                .authenticated()   //// 需要身份认证
-                .and()   //表示一个配置的结束
-                .formLogin().permitAll()  //开启SpringSecurity内置的表单登录，会提供一个/login接口
+        http.formLogin()
+                .loginPage("/index.html") //自定义登录页面
+                .loginProcessingUrl("/login")//自定义登录页面的form表单的地址
+                .defaultSuccessUrl("/LOGIN")//登录成功后访问后台地址
+                .failureUrl("/index.html?error=true")//失败跳回登录页，判断url的参数提示
+                .and()//结束标志
+                .authorizeRequests()
+                .antMatchers("/index.html","/page/regist.html","/getRoleName","/regist").permitAll()//放行页面/资源
+                .antMatchers("/layui/**").permitAll()//放行页面/资源
+                .anyRequest()//任何的请求
+                .authenticated()//都需要身份验证
                 .and()
-                .logout().permitAll()  //开启SpringSecurity内置的退出登录，会为我们提供一个/logout接口
+                .logout()
+                .logoutUrl("/exit")//退出访问的地址
+                .logoutSuccessUrl("/index.html")//退出成功后跳转的页面
                 .and()
-                .csrf().disable();    //关闭csrf跨站伪造请求
+                .headers().frameOptions().disable()//关闭iframe页面嵌套
+                .and()
+                .csrf().disable(); //关闭csrf
     }
 }

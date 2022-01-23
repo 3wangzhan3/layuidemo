@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title></title>
-		<link rel="stylesheet" href="../layui/css/layui.css">
+		<link rel="stylesheet" href="../../layui/css/layui.css">
 	</head>
 	<body>
 		<div style="font-size: 20px; height: 500px;width: 600px; margin-left: 20px;">
@@ -21,16 +21,9 @@
 				</div>
 			</div>
 			<div class="layui-form-item">
-				<label class="layui-form-label">权限:</label>
+				<label class="layui-form-label">年龄:</label>
 				<div class="layui-input-block">
-			      <select id="role_id" name="roleId"></select>
-				  <input id="role_name" style="display: none;" type="text" name="roleName" class="layui-input">
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<label class="layui-form-label">邮箱:</label>
-				<div class="layui-input-inline">
-					<input type="text" name="email" placeholder="请输入邮箱" class="layui-input">
+					<input type="text" name="age" placeholder="请输入年龄" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -42,32 +35,16 @@
 		</form>
 		</div>
 	</body>
-	<script src="../layui/layui.js"></script>
-	<script src="../layui/jquery.min.js"></script>
+	<script src="../../layui/layui.js"></script>
+	<script src="../../layui/jquery.min.js"></script>
 	<script>
 		layui.use('form', function(){
 		  var form = layui.form;
 		  var $= layui.jquery;
 		  
-		  //给权限下拉框赋值
-		  $.ajax({
-			  url:"/getRoleName",
-			  type:"get",
-			  dataType:"json",
-			  success:function(ret){
-				  for(var i=0;i<ret.length;i++){
-					$("#role_id").append("<option value='"+ret[i].roleId+"'>"+ret[i].roleName+"</option>");
-				  }
-				  form.render();	//渲染全部表单元素
-			  }
-		  })
-		  
 		  //监听提交
 		  form.on('submit(formDemo)', function(data){
-			//给roleName赋值
-			var rolename = $("#role_id").find("option:selected").text();
-			data.field.roleName = rolename;
-			//注册用户
+			console.log(data);
 			$.ajax({
 				url:"/regist",
 				type:"post",

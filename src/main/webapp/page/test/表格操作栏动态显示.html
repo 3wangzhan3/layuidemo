@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+<link rel="stylesheet" href="../../layui/css/layui.css">
+</head>
+<body>
+<table id="demo" lay-filter="test" class="layui-table"></table>
+<script src="../../layui/jquery.min.js"></script>
+<script src="../../layui/layui.js"></script>
+<script>
+	var tableIns1; 
+	layui.use('table', function(){
+	  var table = layui.table,
+		  $=layui.$;
+	   tableIns1 = table.render({
+		elem: '#demo'	//table标签的id
+		,id: 'id'
+		,height: 400
+		,url: '/test' //数据接口
+		,page: { //开启分页
+			layout:['limit','count','prev','page','next','skip'],
+			groups: 3,//只显示三个连续码
+			first: false,//不显示首页
+			last:false,//不显示尾页
+			curr:1, //设定初始在第1页
+			limit:10, //每页条数
+			}
+		,cols: [[ //表头,field的值必须与数据库的字段(返回的实体类属性名)一致
+		  {fixed: 'left', type: 'checkbox' }	//多选框
+		  ,{fixed: 'left', width: 80, align: 'center', title: '操作', toolbar: '#barDemo' }	//获取一行数据
+		  ,{field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
+		  ,{field: 'username', title: '用户名', width:80}
+		  ,{field: 'password', title: '密码', width:80, sort: true}
+		  ,{field: 'age', title: '年龄', width:80, sort: true} 
+		]]
+		,limits:[10,20,30] //自定义分页数据选项
+		,done:function(res){	//访问接口成共的回调函数，res变量为所有的数据
+			//console.log(res);
+		}
+	  });
+	  
+	});
+</script>
+
+<!-- js模板 -->
+<script type="text/html" id="barDemo">
+	{{# if (d.age =='1'){}}
+		<span style="color:red;">age为1时</span>
+	{{#}  else if(d.age =='2'){}}
+		<span style="color:blue;">age为2时</span>
+	{{#}}}
+</script>
+</html>

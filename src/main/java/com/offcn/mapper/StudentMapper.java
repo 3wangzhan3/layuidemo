@@ -1,7 +1,9 @@
 package com.offcn.mapper;
 
 import com.offcn.dto.StudentDto;
+import com.offcn.pojo.Role;
 import com.offcn.pojo.Student;
+import com.offcn.pojo.Tuser;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -11,9 +13,13 @@ import java.util.List;
 public interface StudentMapper {
     List<Student> findAll(@Param("dto") StudentDto dto);
 
-    int regist(Student student);
+    void  regist(Tuser user);
 
     int getCount(@Param("dto") StudentDto dto);
 
-    Student findUserByName(String username);
+    Tuser findUserByName(String username);
+
+    List<Role> getRoleName();
+
+    void setRoleUser(@Param("userId") String id,@Param("roleId") String roleId);
 }
