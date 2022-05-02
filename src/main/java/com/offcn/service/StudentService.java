@@ -17,4 +17,6 @@ public interface StudentService {
     Tuser findUserName(String username);
 
     List<Role> getRoleName();
+
+    String addMail(String uuid, String mailTo, String code);
 }

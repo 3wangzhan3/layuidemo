@@ -30,9 +30,20 @@
 			<div class="layui-form-item">
 				<label class="layui-form-label">邮箱:</label>
 				<div class="layui-input-inline">
-					<input type="text" name="email" placeholder="请输入邮箱" class="layui-input">
+					<input type="text" name="email" id="emailTo" placeholder="请输入邮箱" class="layui-input">
+				</div>
+				<div class="layui-input-inline">
+					<input type="button" class="layui-btn" id="mailBtn" value="获取验证码">
 				</div>
 			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">邮箱验证码:</label>
+				<div class="layui-input-inline">
+					<input type="text" name="email" placeholder="请输入邮箱验证码" class="layui-input">
+				</div>
+			</div>
+
 			<div class="layui-form-item">
 				<div class="layui-input-block">
 					<button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
@@ -46,6 +57,7 @@
 	<script src="../layui/jquery.min.js"></script>
 	<script>
 		layui.use('form', function(){
+		  var layer = layui.layer;
 		  var form = layui.form;
 		  var $= layui.jquery;
 		  
@@ -60,7 +72,7 @@
 				  }
 				  form.render();	//渲染全部表单元素
 			  }
-		  })
+		  });
 		  
 		  //监听提交
 		  form.on('submit(formDemo)', function(data){
@@ -77,9 +89,23 @@
 				success:function(response){
 					console.log(response);
 				}
-			})
+			});
 			return false;
 		  });
+
+		  //获取验证码
+			$("#mailBtn").click(function(){
+				var mailTo = $("#emailTo").val();
+				$.ajax({
+					url:"/getEmailCode?mailTo="+mailTo,
+					type:"get",
+					dataType:"json",
+					success:function(result){
+
+					}
+				})
+			});
+
 		});
 	</script>
 </html>

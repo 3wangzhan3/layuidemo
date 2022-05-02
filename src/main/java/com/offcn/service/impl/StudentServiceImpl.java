@@ -7,6 +7,7 @@ import com.offcn.pojo.Role;
 import com.offcn.pojo.Student;
 import com.offcn.pojo.Tuser;
 import com.offcn.service.StudentService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,5 +54,18 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<Role> getRoleName() {
         return studentMapper.getRoleName();
+    }
+
+    @Override
+    public String addMail(String uuid, String mailTo, String code) {
+        try {
+            int ret = studentMapper.addMail(uuid,mailTo,code);
+            if (ret>0){
+                return "成功";
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return "失败";
     }
 }

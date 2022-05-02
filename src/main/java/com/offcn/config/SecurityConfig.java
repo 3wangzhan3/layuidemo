@@ -17,7 +17,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/index.html?error=true")//失败跳回登录页，判断url的参数提示
                 .and()//结束标志
                 .authorizeRequests()
-                .antMatchers("/index.html","/page/regist.html","/getRoleName","/regist").permitAll()//放行页面/资源
+                .antMatchers("/index.html","/page/regist.html","/getRoleName","/regist","/getEmailCode").permitAll()//放行页面/资源
                 .antMatchers("/layui/**").permitAll()//放行页面/资源
                 .anyRequest()//任何的请求
                 .authenticated()//都需要身份验证

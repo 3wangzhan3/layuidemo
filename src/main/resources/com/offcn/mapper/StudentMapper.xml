@@ -31,4 +31,8 @@
     <select id="getRoleName" resultType="role">
         select * from t_role
     </select>
+
+    <insert id="addMail" >
+        insert into mail values(#{uuid},#{mailTo},#{code})
+    </insert>
 </mapper>

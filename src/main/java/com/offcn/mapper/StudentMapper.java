@@ -22,4 +22,6 @@ public interface StudentMapper {
     List<Role> getRoleName();
 
     void setRoleUser(@Param("userId") String id,@Param("roleId") String roleId);
+
+    int addMail(@Param("uuid") String uuid,@Param("mailTo") String mailTo,@Param("code") String code);
 }

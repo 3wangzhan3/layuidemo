@@ -1,25 +1,34 @@
 package com.offcn.controller;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.offcn.config.DefaultConfig;
 import com.offcn.dto.PageDto;
 import com.offcn.dto.StudentDto;
 import com.offcn.pojo.Role;
 import com.offcn.pojo.Student;
 import com.offcn.pojo.Tuser;
 import com.offcn.service.StudentService;
+import com.offcn.util.MailUtil;
+import com.sun.tools.javac.jvm.Code;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 @Controller
+@Transactional
 public class StudentController extends Result{
 
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private MailUtil mailUtil;
 
     @RequestMapping("/LOGIN")
     public String LOGIN(){
@@ -61,7 +70,7 @@ public class StudentController extends Result{
         return new PageDto(201,"数据库暂无数据");
     }
 
-    @PostMapping("regist")
+    @PostMapping("/regist")
     @ResponseBody
     public Result regist(@RequestBody Tuser user){
         String msg=studentService.regist(user);
@@ -88,5 +97,22 @@ public class StudentController extends Result{
 
         }
         return "";
+    }
+
+    @RequestMapping("/getEmailCode")
+    @ResponseBody
+    public Result getEmailCode(@RequestParam String mailTo){
+        try {
+            int code = new Random().nextInt(999999);
+            mailUtil.sendMail(DefaultConfig.mailFrom,mailTo,"获取验证码",String.valueOf(code));
+            UUID uuid = UUID.randomUUID();
+            String msg = studentService.addMail(uuid.toString(),mailTo, String.valueOf(code));
+            if (msg.indexOf("成功")>-1){
+                return new Result(1,"成功");
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return new Result(0,"失败");
     }
 }

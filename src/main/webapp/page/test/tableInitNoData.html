@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+</head>
+<body>
+    <div>
+        <input type="button" value="显示表格" id="btn">
+    </div>
+    <div id="test">
+        <table id="demo" lay-filter="test" class="layui-table"></table>
+    </div>
+<script src="../../layui/layui.js"></script>
+    <script>
+        layui.use('table', function(){
+            var table = layui.table,
+                $=layui.$;
+            tableIns1 = table.render({
+                elem: '#demo'	//table标签的id
+                ,id: 'id'
+                ,height: 400
+                ,url: '/test' //数据接口
+                ,cols: [[
+                    {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
+                    ,{field: 'username', title: '用户名', width:80}
+                    ,{field: 'password', title: '密码', width:80, sort: true}
+                    ,{field: 'age', title: '年龄', width:80, sort: true}
+                ]]
+                ,parseData:function(res){
+                    return {
+                        "code":res.code,
+                        "msg":res.msg,
+                        "count":res.length,
+                        "data":{}//初始化为无数据
+                    }
+                }
+            });
+            table.on('row(test)',function(obj){
+                var data = obj.data;
+                console.log(data);//点击行数据
+                //test:表格外层div的id，用于获取表格的tr元素，点击行事件触发时，样式回归默认
+                $("#test tr").addClass('layui-table-click').siblings().removeClass('layui-bg-cyan');//siblings() 方法返回被选元素的所有同级元素。
+                obj.tr.toggleClass('layui-bg-cyan').siblings().toggleClass('layui-table-click');//点击行切换类。点击事件触发，默认给其他行还原，当前行切换
+            })
+
+            $("#btn").click(function () {
+                tableIns1.reload({
+                    parseData:function(res){
+                        return {
+                            "code":res.code,
+                            "msg":res.msg,
+                            "count":res.length,
+                            "data":res.data//初始化为无数据
+                        }
+                    }
+                });
+
+            })
+        });
+    </script>
+</body>
+</html>
